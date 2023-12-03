@@ -69,6 +69,7 @@ function buildGraph({ nodes, edges }) {
   const tree = treeBuilder(edges);
   const nodesCoordinate = nodesCoordinator(nodes, tree, groupsCount);
   const groupsEdgeCount = edgesAnalyzer(edges, nodesCoordinate);
+  const filledEdges = {};
 
   const _edges = edges.map(({ startNode, endNode }) => {
     const {
@@ -76,6 +77,7 @@ function buildGraph({ nodes, edges }) {
       group: startGroup,
       levelItems: startLevelItems,
     } = nodesCoordinate[startNode];
+    const startGroupStartEdges = groupsEdgeCount[startGroup][0];
     const {
       order: endOrder,
       group: endGroup,
@@ -83,6 +85,14 @@ function buildGraph({ nodes, edges }) {
     } = nodesCoordinate[endNode];
     const { children } = tree[startNode];
     const { parents } = tree[endNode];
+    if (!filledEdges[startGroup]) {
+      filledEdges[startGroup] = 0;
+    }
+
+    filledEdges[startGroup]++;
+
+    const heightDisplace =
+      10 + (filledEdges[startGroup] / startGroupStartEdges) * 60;
 
     const startOrderCoordinate = orderToCoordinate(startOrder);
     const endOrderCoordinate = orderToCoordinate(endOrder);
@@ -108,11 +118,11 @@ function buildGraph({ nodes, edges }) {
         : 0;
 
     // TODO use groupsEdgeCount
-    let heightDisplace =
-      10 +
-      (delta > 0
-        ? ((maxGroupItems - Math.abs(delta)) / maxGroupItems) * 40 + 40
-        : (Math.abs(delta) / maxGroupItems) * 40);
+    // let heightDisplace =
+    //   10 +
+    //   (delta > 0
+    //     ? ((maxGroupItems - Math.abs(delta)) / maxGroupItems) * 40 + 40
+    //     : (startOrder / startGroupStartEdges) * 40);
 
     return {
       startNode,
