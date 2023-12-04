@@ -92,7 +92,7 @@ function buildGraph({ nodes, edges }) {
     filledEdges[startGroup]++;
 
     const heightDisplace =
-      10 + (filledEdges[startGroup] / startGroupStartEdges) * 60;
+      80 - (filledEdges[startGroup] / startGroupStartEdges) * 60;
 
     const startOrderCoordinate = orderToCoordinate(startOrder);
     const endOrderCoordinate = orderToCoordinate(endOrder);
