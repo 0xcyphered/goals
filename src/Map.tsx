@@ -19,7 +19,7 @@ function Map() {
   const [leftMargin, setLeftMargin] = useState(0);
 
   useEffect(() => {
-    const _data = generateData(23, 3);
+    const _data = generateData(23, 4);
     console.log('data', _data);
     setData(_data);
   }, []);
@@ -86,17 +86,23 @@ function buildGraph({ nodes, edges }) {
     const { children } = tree[startNode];
     const { parents } = tree[endNode];
     if (!filledEdges[startGroup]) {
-      filledEdges[startGroup] = 0;
+      filledEdges[startGroup] = {
+        topTrailer: 0,
+        botTrailer: 0,
+      };
     }
-
-    filledEdges[startGroup]++;
-
-    const heightDisplace =
-      80 - (filledEdges[startGroup] / startGroupStartEdges) * 60;
 
     const startOrderCoordinate = orderToCoordinate(startOrder);
     const endOrderCoordinate = orderToCoordinate(endOrder);
     const delta = endOrderCoordinate - startOrderCoordinate;
+    const edgeOrder =
+      delta > 0
+        ? filledEdges[startGroup].topTrailer++
+        : filledEdges[startGroup].botTrailer++;
+    const heightDisplace =
+      delta > 0
+        ? 90 - (edgeOrder / startGroupStartEdges) * 90
+        : 10 + (edgeOrder / startGroupStartEdges) * 90;
 
     // maybe add very tiny random amount ?!
     const startDisplace =
