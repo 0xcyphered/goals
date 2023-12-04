@@ -19,7 +19,7 @@ function Map() {
   const [leftMargin, setLeftMargin] = useState(0);
 
   useEffect(() => {
-    const _data = generateData(23, 4);
+    const _data = generateData(23, 3);
     console.log('data', _data);
     setData(_data);
   }, []);
@@ -101,8 +101,8 @@ function buildGraph({ nodes, edges }) {
         : filledEdges[startGroup].botTrailer++;
     const heightDisplace =
       delta > 0
-        ? 90 - (edgeOrder / startGroupStartEdges) * 90
-        : 10 + (edgeOrder / startGroupStartEdges) * 90;
+        ? 80 - (edgeOrder / startGroupStartEdges) * 80
+        : 20 + (edgeOrder / startGroupStartEdges) * 80;
 
     // maybe add very tiny random amount ?!
     const startDisplace =
@@ -121,7 +121,11 @@ function buildGraph({ nodes, edges }) {
       parents.length > 1
         ? Math.min(startOrderCoordinate - endOrderCoordinate, parents.length) /
           parents.length
-        : 0;
+        : startOrder === endOrder
+        ? 0
+        : delta > 0
+        ? -1
+        : 1;
 
     // TODO use groupsEdgeCount
     // let heightDisplace =
